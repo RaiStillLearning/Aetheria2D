@@ -1123,7 +1123,7 @@ GameObject:
   - component: {fileID: 984029985}
   - component: {fileID: 984029984}
   - component: {fileID: 984029983}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: --- PLAYER ---
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -1160,11 +1160,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3c8b99dec3e8e4b4cb2a93d3e45eec6a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerController
-  jumpForce: 12
+  moveSpeed: 5
+  jumpForce: 14
+  fallMultiplier: 2.8
+  lowJumpMultiplier: 2.2
+  groundCheck: {fileID: 598087323}
+  groundCheckRadius: 0.18
   groundLayer:
     serializedVersion: 2
-    m_Bits: 0
-  maxLives: 3
+    m_Bits: 512
+  isDead: 0
 --- !u!61 &984029984
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -1209,7 +1214,7 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 0.7, y: 0.9}
+  m_Size: {x: 0.6, y: 0.85}
   m_EdgeRadius: 0
 --- !u!50 &984029985
 Rigidbody2D:
@@ -1328,7 +1333,7 @@ GameObject:
   - component: {fileID: 1079816372}
   - component: {fileID: 1079816374}
   - component: {fileID: 1079816373}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Ground
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1394,7 +1399,7 @@ BoxCollider2D:
     drawMode: 2
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 0.0001, y: 0.0001}
+  m_Size: {x: 12, y: 2}
   m_EdgeRadius: 0
 --- !u!212 &1079816374
 SpriteRenderer:
@@ -1846,7 +1851,7 @@ GameObject:
   - component: {fileID: 1407020693}
   - component: {fileID: 1407020695}
   - component: {fileID: 1407020694}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Platform_Start
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1912,7 +1917,7 @@ BoxCollider2D:
     drawMode: 2
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 0.0001, y: 0.0001}
+  m_Size: {x: 5, y: 1}
   m_EdgeRadius: 0
 --- !u!212 &1407020695
 SpriteRenderer:
@@ -2019,9 +2024,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: db8955a642b4949859e5314e1c90807b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CameraFollow
-  target: {fileID: 0}
-  smoothSpeed: 5
-  offset: {x: 0, y: 2}
+  target: {fileID: 984029982}
+  smoothSpeed: 6
+  offsetX: 0
+  offsetY: 2.5
+  onlyFollowUp: 1
 --- !u!81 &1548106628
 AudioListener:
   m_ObjectHideFlags: 0
@@ -2125,8 +2132,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 06b8865396f45439e93dbe023b6b3199, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameManager
-  player: {fileID: 0}
-  spawner: {fileID: 0}
+  player: {fileID: 984029983}
+  spawner: {fileID: 1818732745}
   cameraTransform: {fileID: 1548106626}
   scoreText: {fileID: 1041954904}
   livesText: {fileID: 864776064}
@@ -2134,7 +2141,6 @@ MonoBehaviour:
   gameOverScoreText: {fileID: 177037133}
   restartButton: {fileID: 1138840518}
   maxLives: 3
-  deathYOffset: -6
 --- !u!1 &1802085713
 GameObject:
   m_ObjectHideFlags: 0
@@ -2255,7 +2261,6 @@ MonoBehaviour:
   maxYGap: 2
   minWidth: 1.5
   maxWidth: 3.5
-  despawnY: -3
 --- !u!1 &1839459492
 GameObject:
   m_ObjectHideFlags: 0
