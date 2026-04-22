@@ -1,3 +1,4 @@
+# Unity generated folders
 [Ll]ibrary/
 [Tt]emp/
 [Oo]bj/
@@ -6,6 +7,15 @@
 [Ll]ogs/
 UserSettings/
 
+# MemoryCaptures can get excessive in size
+MemoryCaptures/
+
+# Asset meta data should be included
+!/[Aa]ssets/**/*.meta
+!/[Pp]ackages/**/*.meta
+
+# Ignore Visual Studio / Rider
+.vs/
 *.csproj
 *.unityproj
 *.sln
@@ -14,9 +24,28 @@ UserSettings/
 *.user
 *.userprefs
 *.pidb
-*.booproj
-*.svd
 *.pdb
+*.mdb
+*.opendb
+*.VC.db
 
+# JetBrains Rider
+.idea/
+
+# Unity cache server
+[Cc]ache/
+
+# OS files
 .DS_Store
 Thumbs.db
+
+# Builds
+*.apk
+*.aab
+*.unitypackage
+
+# Addressables
+ServerData/
+
+# Crash reports
+sysinfo.txt
