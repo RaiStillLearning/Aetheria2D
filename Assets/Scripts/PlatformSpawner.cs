@@ -1,19 +1,23 @@
 using UnityEngine;
 using System.Collections.Generic;
 
+/// <summary>
+/// PlatformSpawner - spawn dan hapus platform secara dinamis
+/// sesuai posisi kamera. Tidak menggunakan Input System.
+/// </summary>
 public class PlatformSpawner : MonoBehaviour
 {
     [Header("Platform Prefab")]
     public GameObject platformPrefab;
 
     [Header("Spawn Settings")]
-    public int initialPlatforms = 12;
-    public float minX = -3f;
-    public float maxX = 3f;
-    public float minYGap = 1.3f;
-    public float maxYGap = 2.0f;
-    public float minWidth = 1.5f;
-    public float maxWidth = 3.5f;
+    public int   initialPlatforms = 12;
+    public float minX      = -3f;
+    public float maxX      =  3f;
+    public float minYGap   =  1.3f;
+    public float maxYGap   =  2.0f;
+    public float minWidth  =  1.5f;
+    public float maxWidth  =  3.5f;
 
     List<GameObject> _platforms = new List<GameObject>();
     float _nextSpawnY;
@@ -23,7 +27,7 @@ public class PlatformSpawner : MonoBehaviour
     {
         _cam = Camera.main;
 
-        // Spawn platform bawah awal (ground start area)
+        // Platform awal di bawah
         SpawnAt(new Vector2(0f, -2.5f), 5f);
         _nextSpawnY = -1f;
 
@@ -33,7 +37,7 @@ public class PlatformSpawner : MonoBehaviour
 
     void Update()
     {
-        if (_cam == null) return;
+        if (_cam == null) { _cam = Camera.main; return; }
 
         // Spawn platform baru di atas viewport
         float camTop = _cam.transform.position.y + _cam.orthographicSize + 2f;
@@ -63,27 +67,24 @@ public class PlatformSpawner : MonoBehaviour
     void SpawnAt(Vector2 pos, float width)
     {
         if (platformPrefab == null) return;
+
         var go = Instantiate(platformPrefab, pos, Quaternion.identity);
 
-        // Set SpriteRenderer tiled size
         var sr = go.GetComponent<SpriteRenderer>();
         if (sr != null)
         {
             sr.drawMode = SpriteDrawMode.Tiled;
-            sr.size = new Vector2(width, 0.5f);
+            sr.size     = new Vector2(width, 0.5f);
         }
 
-        // Set BoxCollider2D sesuai size
         var bc = go.GetComponent<BoxCollider2D>();
         if (bc != null)
         {
-            bc.size = new Vector2(width, 0.5f);
+            bc.size   = new Vector2(width, 0.5f);
             bc.offset = Vector2.zero;
         }
 
-        // Pastikan layer Ground
         go.layer = LayerMask.NameToLayer("Ground");
-
         _platforms.Add(go);
     }
 }

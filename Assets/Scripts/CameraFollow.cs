@@ -1,53 +1,77 @@
 using UnityEngine;
 
 /// <summary>
-/// CameraFollow - Vertical Platformer
-/// Kamera mengikuti player ke atas dengan smooth.
-/// Tidak turun saat player jatuh (agar player tidak lihat bawah).
+/// CameraFollow - smooth follow untuk vertical platformer.
+/// Karakter selalu terlihat full, kamera smooth naik-turun.
 /// </summary>
 public class CameraFollow : MonoBehaviour
 {
     [Header("Target")]
     public Transform target;
 
-    [Header("Follow Settings")]
-    public float smoothSpeed = 6f;
+    [Header("Offset dari target")]
     public float offsetX = 0f;
-    public float offsetY = 2.5f;
+    [Tooltip("Seberapa jauh kamera di atas karakter (world units)")]
+    public float offsetY = 2.0f;
 
-    [Header("Vertical Lock")]
-    [Tooltip("Kamera hanya naik, tidak turun (false = ikut naik turun)")]
-    public bool onlyFollowUp = true;
+    [Header("Smooth Speed")]
+    [Range(1f, 20f)] public float smoothY = 8f;
+    [Range(1f, 20f)] public float smoothX = 5f;
 
-    float _highestY;
+    [Header("Dead Zone (berhenti follow kalau dalam zona ini)")]
+    public float deadZoneX = 0.5f;
+    public float deadZoneY = 0.3f;
+
+    [Header("Clamp (batas kamera tidak bisa lebih rendah dari sini)")]
+    public bool  useLowerBound = true;
+    public float lowerBoundY   = -4f;
+
+    // Target posisi yang diinginkan kamera
+    Vector3 _velocity = Vector3.zero;
 
     void Start()
     {
         if (target == null)
         {
-            // Auto-find player
-            var player = GameObject.Find("--- PLAYER ---");
-            if (player != null) target = player.transform;
+            var p = GameObject.Find("--- PLAYER ---");
+            if (p != null) target = p.transform;
         }
-        _highestY = transform.position.y;
+
+        // Snap kamera langsung ke posisi target di awal (tidak slide dari 0,0)
+        if (target != null)
+        {
+            Vector3 snap = new Vector3(
+                target.position.x + offsetX,
+                target.position.y + offsetY,
+                transform.position.z);
+            transform.position = snap;
+        }
     }
 
     void LateUpdate()
     {
         if (target == null) return;
 
-        float targetX = target.position.x + offsetX;
-        float targetY = target.position.y + offsetY;
+        float desiredX = target.position.x + offsetX;
+        float desiredY = target.position.y + offsetY;
 
-        if (onlyFollowUp)
-            targetY = Mathf.Max(targetY, _highestY);
+        // Clamp batas bawah
+        if (useLowerBound)
+            desiredY = Mathf.Max(desiredY, lowerBoundY);
 
-        float newY = Mathf.Lerp(transform.position.y, targetY, smoothSpeed * Time.deltaTime);
-        float newX = Mathf.Lerp(transform.position.x, targetX, smoothSpeed * Time.deltaTime);
+        float currentX = transform.position.x;
+        float currentY = transform.position.y;
+
+        // Dead zone - jangan gerak kalau sudah cukup dekat
+        float newX = currentX;
+        float newY = currentY;
+
+        if (Mathf.Abs(desiredX - currentX) > deadZoneX)
+            newX = Mathf.Lerp(currentX, desiredX, smoothX * Time.deltaTime);
+
+        if (Mathf.Abs(desiredY - currentY) > deadZoneY)
+            newY = Mathf.Lerp(currentY, desiredY, smoothY * Time.deltaTime);
 
         transform.position = new Vector3(newX, newY, transform.position.z);
-
-        if (transform.position.y > _highestY)
-            _highestY = transform.position.y;
     }
 }

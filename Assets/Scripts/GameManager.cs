@@ -2,48 +2,54 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
 
+/// <summary>
+/// GameManager - mengatur score, lives, respawn, game over.
+/// Tidak menggunakan Input System secara langsung.
+/// </summary>
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance;
 
     [Header("References")]
     public PlayerController player;
-    public PlatformSpawner spawner;
-    public Transform cameraTransform;
+    public PlatformSpawner  spawner;
+    public Transform        cameraTransform;
 
     [Header("UI")]
-    public Text scoreText;
-    public Text livesText;
+    public Text     scoreText;
+    public Text     livesText;
     public GameObject gameOverPanel;
-    public Text gameOverScoreText;
-    public Button restartButton;
+    public Text     gameOverScoreText;
+    public Button   restartButton;
 
     [Header("Settings")]
     public int maxLives = 3;
 
-    int _lives;
-    int _score;
+    int   _lives;
+    int   _score;
     float _highestY;
-    bool _gameOver;
+    bool  _gameOver;
 
     void Awake()
     {
         if (Instance == null) Instance = this;
-        else Destroy(gameObject);
+        else { Destroy(gameObject); return; }
     }
 
     void Start()
     {
-        _lives = maxLives;
-        _score = 0;
+        _lives    = maxLives;
+        _score    = 0;
         _gameOver = false;
 
+        // Auto-find player jika belum di-assign
         if (player == null)
         {
             var go = GameObject.Find("--- PLAYER ---");
             if (go != null) player = go.GetComponent<PlayerController>();
         }
 
+        // Auto-find camera
         if (cameraTransform == null && Camera.main != null)
             cameraTransform = Camera.main.transform;
 
@@ -51,6 +57,7 @@ public class GameManager : MonoBehaviour
 
         if (gameOverPanel) gameOverPanel.SetActive(false);
         if (restartButton) restartButton.onClick.AddListener(RestartGame);
+
         UpdateUI();
     }
 
@@ -61,10 +68,11 @@ public class GameManager : MonoBehaviour
         float py = player.transform.position.y;
         if (py > _highestY)
         {
-            _score += Mathf.FloorToInt((py - _highestY) * 10f);
+            _score   += Mathf.FloorToInt((py - _highestY) * 10f);
             _highestY = py;
         }
 
+        // Player jatuh di bawah kamera -> mati
         if (cameraTransform != null)
         {
             float camBottom = cameraTransform.position.y - 7f;
@@ -97,7 +105,7 @@ public class GameManager : MonoBehaviour
     {
         yield return new WaitForSeconds(1.2f);
         _gameOver = true;
-        if (gameOverPanel) gameOverPanel.SetActive(true);
+        if (gameOverPanel)     gameOverPanel.SetActive(true);
         if (gameOverScoreText) gameOverScoreText.text = "Score: " + _score;
     }
 
@@ -106,10 +114,6 @@ public class GameManager : MonoBehaviour
         UnityEngine.SceneManagement.SceneManager.LoadScene(
             UnityEngine.SceneManagement.SceneManager.GetActiveScene().buildIndex);
     }
-
-    public void UpdateLives(int newLives) { _lives = newLives; UpdateUI(); }
-    public void UpdateScore(int newScore) { if (newScore > _score) { _score = newScore; UpdateUI(); } }
-    public void RespawnPlayer(PlayerController p) { StartCoroutine(RespawnRoutine()); }
 
     void UpdateUI()
     {

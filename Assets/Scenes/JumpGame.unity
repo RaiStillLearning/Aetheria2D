@@ -506,7 +506,7 @@ Transform:
   m_GameObject: {fileID: 598087322}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: -0.5, z: 0}
+  m_LocalPosition: {x: 0, y: -1.4, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1025,7 +1025,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 2, y: 2, z: 1}
+  m_LocalScale: {x: 1.5, y: 1.5, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 984029982}
@@ -1122,7 +1122,7 @@ GameObject:
   - component: {fileID: 984029982}
   - component: {fileID: 984029985}
   - component: {fileID: 984029984}
-  - component: {fileID: 984029983}
+  - component: {fileID: 984029986}
   m_Layer: 8
   m_Name: --- PLAYER ---
   m_TagString: Player
@@ -1139,7 +1139,7 @@ Transform:
   m_GameObject: {fileID: 984029981}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: -1.5, z: 0}
+  m_LocalPosition: {x: 0, y: -0.4, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -1148,28 +1148,6 @@ Transform:
   - {fileID: 488538557}
   m_Father: {fileID: 808399187}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &984029983
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 984029981}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3c8b99dec3e8e4b4cb2a93d3e45eec6a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PlayerController
-  moveSpeed: 5
-  jumpForce: 14
-  fallMultiplier: 2.8
-  lowJumpMultiplier: 2.2
-  groundCheck: {fileID: 598087323}
-  groundCheckRadius: 0.18
-  groundLayer:
-    serializedVersion: 2
-    m_Bits: 512
-  isDead: 0
 --- !u!61 &984029984
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -1214,7 +1192,7 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 0.6, y: 0.85}
+  m_Size: {x: 1, y: 2.8}
   m_EdgeRadius: 0
 --- !u!50 &984029985
 Rigidbody2D:
@@ -1243,6 +1221,28 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 1
   m_Constraints: 4
+--- !u!114 &984029986
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 984029981}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3d91d2e8086394885b946c729165c7f0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerController
+  moveSpeed: 5
+  jumpForce: 14
+  fallMultiplier: 2.8
+  lowJumpMultiplier: 2.2
+  groundCheck: {fileID: 598087323}
+  groundCheckRadius: 0.3
+  groundLayer:
+    serializedVersion: 2
+    m_Bits: 512
+  isDead: 0
 --- !u!1 &1041954902
 GameObject:
   m_ObjectHideFlags: 0
@@ -2006,7 +2006,7 @@ Transform:
   m_GameObject: {fileID: 1548106625}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -10}
+  m_LocalPosition: {x: 0, y: 2.6, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2025,10 +2025,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CameraFollow
   target: {fileID: 984029982}
-  smoothSpeed: 6
   offsetX: 0
-  offsetY: 2.5
-  onlyFollowUp: 1
+  offsetY: 3
+  smoothY: 6
+  smoothX: 4
+  deadZoneX: 0.3
+  deadZoneY: 0.2
+  useLowerBound: 1
+  lowerBoundY: -100
 --- !u!81 &1548106628
 AudioListener:
   m_ObjectHideFlags: 0
@@ -2132,14 +2136,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 06b8865396f45439e93dbe023b6b3199, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameManager
-  player: {fileID: 984029983}
+  player: {fileID: 984029986}
   spawner: {fileID: 1818732745}
   cameraTransform: {fileID: 1548106626}
   scoreText: {fileID: 1041954904}
   livesText: {fileID: 864776064}
   gameOverPanel: {fileID: 2059238558}
-  gameOverScoreText: {fileID: 177037133}
-  restartButton: {fileID: 1138840518}
+  gameOverScoreText: {fileID: 0}
+  restartButton: {fileID: 0}
   maxLives: 3
 --- !u!1 &1802085713
 GameObject:
@@ -2250,14 +2254,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 1818732743}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 11b0cc6d6c6364d88abc7b5b8ee65049, type: 3}
+  m_Script: {fileID: 11500000, guid: 6cd0b156cff934343b9d1a58062d971b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlatformSpawner
   platformPrefab: {fileID: 4163093089790069298, guid: 58e1c55ebe8b444b8a9974e2cff81156, type: 3}
-  initialPlatforms: 10
-  minX: -2
-  maxX: 2
-  minYGap: 1.2
+  initialPlatforms: 12
+  minX: -3
+  maxX: 3
+  minYGap: 1.3
   maxYGap: 2
   minWidth: 1.5
   maxWidth: 3.5
